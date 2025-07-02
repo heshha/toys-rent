@@ -3,6 +3,7 @@ package cn.edu.sdua.toysrent.controller;
 import cn.edu.sdua.toysrent.service.ToyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,12 @@ public class ToyImageController {
     // 获取玩具图片
     @GetMapping("/{toyId}")
     @Operation(summary = "获取玩具图片", description = "获取玩具图片")
-    public ResponseEntity<byte[]> getToyImage(@PathVariable("toyId") long toyId) throws IOException {
+    public ResponseEntity<byte[]> getToyImage(@PathVariable("toyId") long toyId, HttpServletResponse  response) throws IOException {
+        // 设置禁用缓存
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        response.setHeader("Pragma", "no-cache");
+        response.setDateHeader("Expires", 0);
+
         ResponseEntity<byte[]> image = toyService.getToyImage(toyId);
         return image;
     }

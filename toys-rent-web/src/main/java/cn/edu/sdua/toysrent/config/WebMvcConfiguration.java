@@ -2,6 +2,7 @@ package cn.edu.sdua.toysrent.config;
 
 
 import cn.edu.sdua.toysrent.interceptor.AuthenticationInterceptor;
+import cn.edu.sdua.toysrent.interceptor.CacheInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +19,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(org.springframework.web.servlet.config.annotation.InterceptorRegistry registry) {
-        log.info("开始添加拦截器...");
+        // 添加身份验证拦截器
         registry.addInterceptor(authenticationInterceptor)
                 .addPathPatterns("/api/**")
                 .excludePathPatterns(
@@ -29,6 +30,19 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
                         "/webjars/**",
                         "/swagger-resources",
                         "/v3/api-docs/**");
+        // 添加缓存拦截器
+        registry.addInterceptor(new CacheInterceptor())
+                .addPathPatterns("/api/**");
+    }
+
+    // 处理跨域
+    @Override
+    public void addCorsMappings(org.springframework.web.servlet.config.annotation.CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOriginPatterns("*")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowCredentials(true)
+                .maxAge(3600);
     }
 
     /**

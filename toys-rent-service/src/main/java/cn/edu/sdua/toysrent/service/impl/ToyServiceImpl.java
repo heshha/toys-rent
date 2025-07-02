@@ -164,7 +164,7 @@ public class ToyServiceImpl implements ToyService {
 
         // 保存路径
 
-        String path = imagePath + fileName;
+        String path = imagePath + toyId + "_" + fileName;
         System.out.println("path: " + path);
         // 保存文件
         image.transferTo(new File(path));
@@ -190,6 +190,7 @@ public class ToyServiceImpl implements ToyService {
         // 获取文件数组
         byte[] imageBytes = fileInputStream.readAllBytes();
         imageUrl = URLEncoder.encode(imageUrl, "UTF-8");
+        fileInputStream.close();
         //  返回图片
         return ResponseEntity.ok()
                 .contentType(MediaType.IMAGE_PNG) // 根据实际类型设置
